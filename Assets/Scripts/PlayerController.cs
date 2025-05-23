@@ -22,6 +22,13 @@ public class PlayerController : MonoBehaviour
     string nowAnime = "";
     string oldAnime = "";
 
+    public static string gameState = "Playing";
+
+    // 이중점프 - 시작
+    int jumpCount = 0;             // 현재 점프 횟수
+    public int maxJumpCount = 2;   // 최대 점프 횟수 (2단 점프)
+    // 이중점프 - 끝
+
     // Start is called before the first frame update
     void Start()
     {
@@ -29,11 +36,18 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         nowAnime = stopAnime;
         oldAnime = stopAnime;
+
+        gameState = "Playing";
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (gameState != "Playing")
+        {
+            return;
+        }
+
         axisH = Input.GetAxisRaw("Horizontal");
         if (axisH > 0.0f)
         {
@@ -53,6 +67,11 @@ public class PlayerController : MonoBehaviour
     // 
     private void FixedUpdate()
     {
+        if (gameState != "Playing")
+        {
+            return;
+        }
+
         // 그라운드에 서있는지 판정하는 코드 1
         //onGround = Physics2D.Linecast(transform.position,
         //    transform.position - (transform.up * 0.1f),
@@ -61,6 +80,13 @@ public class PlayerController : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 0.1f, groundLayer);
         onGround = hit.collider != null;
 
+        // 이중점프 - 시작
+        if (onGround)
+        {
+            jumpCount = 0;  // 착지 시 점프 횟수 초기화
+        }
+        // 이중점프 - 끝
+
         if (onGround || axisH != 0)
         {
             rbody.velocity = new Vector2(axisH * speed, rbody.velocity.y);
@@ -68,11 +94,18 @@ public class PlayerController : MonoBehaviour
             // y는 기존값 유지!!
         }
 
-        if (onGround && goJump)
+        //if (onGround && goJump)
+        //{
+        //    rbody.AddForce(new Vector2(0, jump), ForceMode2D.Impulse);
+        //    goJump = false;
+        //}
+        // 이중점프 - 시작
+        if (goJump)
         {
             rbody.AddForce(new Vector2(0, jump), ForceMode2D.Impulse);
             goJump = false;
         }
+        // 이중점프 - 끝
 
         if (onGround)
         {
@@ -98,7 +131,15 @@ public class PlayerController : MonoBehaviour
     
     public void Jump()
     {
-        goJump = true;
+        // goJump = true;
+
+        // 이중점프 - 시작
+        jumpCount++;  // 점프 횟수 증가
+        if (jumpCount < maxJumpCount)
+        {
+            goJump = true;            
+        }
+        // 이중점프 - 끝
     }
 
     // collider의 isTrigger 속성을 사용할 경우 발생하는 이벤트 함수
@@ -133,10 +174,22 @@ public class PlayerController : MonoBehaviour
     public void Goal()
     {
         animator.Play(goalAnime);
+        gameState = "gameclear";
+        GameStop();
     }
 
     public void GameOver()
     {
+        gameState = "gameOver";
+        rbody.velocity = Vector2.zero;
+        rbody.AddForce(new Vector2(0, 5), ForceMode2D.Impulse);
+        GetComponent<CapsuleCollider2D>().enabled = false;
         animator.Play(deadAnime);
+    }
+
+    public void GameStop()
+    {
+        Rigidbody2D rbody = GetComponent<Rigidbody2D>();
+        rbody.velocity = Vector2.zero;
     }
 }
