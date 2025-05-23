@@ -41,10 +41,13 @@ public class PlayerController : MonoBehaviour
     // 
     private void FixedUpdate()
     {
-        // 그라운드에 서있는지 판정하는 코드
-        onGround = Physics2D.Linecast(transform.position,
-            transform.position - (transform.up * 0.1f),
-            groundLayer);
+        // 그라운드에 서있는지 판정하는 코드 1
+        //onGround = Physics2D.Linecast(transform.position,
+        //    transform.position - (transform.up * 0.1f),
+        //    groundLayer);
+        // 그라운드에 서있는지 판정하는 코드 2
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 0.1f, groundLayer);
+        onGround = hit.collider != null;
 
         if (onGround || axisH != 0)
         {
