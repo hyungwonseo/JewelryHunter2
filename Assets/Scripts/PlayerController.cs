@@ -13,10 +13,22 @@ public class PlayerController : MonoBehaviour
     bool goJump = false;
     bool onGround = false;
 
+    Animator animator;
+    public string stopAnime = "PlayerStop";
+    public string moveAnime = "PlayerMove";
+    public string jumpAnime = "PlayerJump";
+    public string goalAnime = "PlayerGoal";
+    public string deadAnime = "PlayerOver";
+    string nowAnime = "";
+    string oldAnime = "";
+
     // Start is called before the first frame update
     void Start()
     {
         rbody = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        nowAnime = stopAnime;
+        oldAnime = stopAnime;
     }
 
     // Update is called once per frame
@@ -61,10 +73,70 @@ public class PlayerController : MonoBehaviour
             rbody.AddForce(new Vector2(0, jump), ForceMode2D.Impulse);
             goJump = false;
         }
+
+        if (onGround)
+        {
+            if (axisH == 0)
+            {
+                nowAnime = stopAnime;
+            }else
+            {
+                nowAnime = moveAnime;
+            }
+        }
+        else
+        {
+            nowAnime = jumpAnime;
+        }
+
+        if (nowAnime != oldAnime)
+        {
+            oldAnime = nowAnime;
+            animator.Play(nowAnime);
+        }
     }
     
     public void Jump()
     {
         goJump = true;
+    }
+
+    // collider의 isTrigger 속성을 사용할 경우 발생하는 이벤트 함수
+    // isTrigger는 충돌을 감지만하고 이동을 막지는 않음
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Goal")
+        {
+            Goal();
+        }
+        else if (collision.gameObject.tag == "Dead")
+        {
+            GameOver();
+        }
+    }
+
+    // collider의 isTrigger 속성을 사용하지 않을 경우(디폴트) 발생하는 이벤트 함수
+    // 충돌 감지와 더불어 이동을 막음(= 벽처럼 동작)
+    //public void OnCollisionEnter2D(Collision2D collision)
+    //{
+    //    Debug.Log("OnCollisionEnter2D 충돌 이벤트 발생");
+    //    if (collision.gameObject.tag == "Goal")
+    //    {            
+    //        Goal();
+    //    }
+    //    else if (collision.gameObject.tag == "Dead")
+    //    {
+    //        GameOver();
+    //    }
+    //}
+
+    public void Goal()
+    {
+        animator.Play(goalAnime);
+    }
+
+    public void GameOver()
+    {
+        animator.Play(deadAnime);
     }
 }
