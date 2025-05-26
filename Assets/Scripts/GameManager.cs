@@ -20,6 +20,10 @@ public class GameManager : MonoBehaviour
         Invoke("InactiveImage", 1.0f);
         // 버튼(패널)을 숨기기
         panel.SetActive(false);
+
+        // 버튼 이벤트 등록
+        restartButton.GetComponent<Button>().onClick.AddListener(HandleRestartButton);
+        nextButton.GetComponent<Button>().onClick.AddListener(HandleNextButton);
     }
 
     // Update is called once per frame
@@ -52,9 +56,27 @@ public class GameManager : MonoBehaviour
             // DO NOTHING!!!
         }
     }
+
+    private void OnDestroy()
+    {
+        // 버튼 이벤트 등록 해제
+        restartButton.GetComponent<Button>().onClick.RemoveListener(HandleRestartButton);
+        nextButton.GetComponent<Button>().onClick.RemoveListener(HandleNextButton);
+    }
+
     // 이미지 숨기기
     void InactiveImage()
     {
         mainImage.SetActive(false);
+    }
+
+    void HandleRestartButton()
+    {
+
+    }
+
+    void HandleNextButton()
+    {
+
     }
 }
