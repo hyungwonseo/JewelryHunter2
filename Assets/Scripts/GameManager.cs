@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -72,11 +73,22 @@ public class GameManager : MonoBehaviour
 
     void HandleRestartButton()
     {
-
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentScene);
+        Debug.Log("Restart scene : " + currentScene);
     }
 
     void HandleNextButton()
     {
-
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        int lastScene = SceneManager.sceneCountInBuildSettings - 1;
+        if (currentScene == lastScene)
+        {
+            Debug.Log("현재 스테이지가 마지막 스테이지입니다.");
+            SceneManager.LoadScene(0);
+        }else
+        {
+            SceneManager.LoadScene(currentScene + 1);
+        }
     }
 }
