@@ -282,7 +282,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7279016087222377048, guid: 9e99877438e88f548b7d9a2fcc096c73, type: 3}
       propertyPath: isForceScrollX
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7279016087222377048, guid: 9e99877438e88f548b7d9a2fcc096c73, type: 3}
       propertyPath: forceScrollSpeedX
@@ -846,7 +846,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1176375706
 Transform:
   m_ObjectHideFlags: 0
@@ -1112,7 +1112,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1247999111
 Transform:
   m_ObjectHideFlags: 0
@@ -1648,7 +1648,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1742827120
 Transform:
   m_ObjectHideFlags: 0
