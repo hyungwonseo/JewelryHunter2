@@ -14,6 +14,11 @@ public class GameManager : MonoBehaviour
     public GameObject nextButton;       // NEXT 버튼
     Image titleImage;                   // 이미지를 표시하고있는 Image 컴포넌트
 
+    // +++ 시간 제한 추가 +++
+    public GameObject timeBar;          // 시간 표시 이미지 
+    public GameObject timeText;         // 시간 텍스트
+    public TimeController timeCnt;             // TimeController
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,6 +30,17 @@ public class GameManager : MonoBehaviour
         // 버튼 이벤트 등록
         restartButton.GetComponent<Button>().onClick.AddListener(HandleRestartButton);
         nextButton.GetComponent<Button>().onClick.AddListener(HandleNextButton);
+
+        // +++ 시간 제한 추가 +++
+        // TimeController 가져옴
+        timeCnt = GetComponent<TimeController>();
+        if (timeCnt != null)
+        {
+            if (timeCnt.gameTime == 0.0f)
+            {
+                timeBar.SetActive(false);   // 시간 제한이 없으면 숨김
+            }
+        }
     }
 
     // Update is called once per frame
@@ -40,6 +56,12 @@ public class GameManager : MonoBehaviour
             bt.interactable = false;
             mainImage.GetComponent<Image>().sprite = gameClearSpr;
             PlayerController.gameState = "gameend";
+
+            // +++ 시간 제한 추가 +++
+            if (timeCnt != null)
+            {
+                timeCnt.isTimeOver = true; // 시간 카운트 중지
+            }
         }
         else if (PlayerController.gameState == "gameover")
         {
@@ -51,10 +73,36 @@ public class GameManager : MonoBehaviour
             bt.interactable = false;
             mainImage.GetComponent<Image>().sprite = gameOverSpr;
             PlayerController.gameState = "gameend";
+
+            // +++ 시간 제한 추가 +++
+            if (timeCnt != null)
+            {
+                timeCnt.isTimeOver = true; // 시간 카운트 중지
+            }
         }
-        else if (PlayerController.gameState == "playing")
+        else if (PlayerController.gameState == "Playing")
         {
-            // DO NOTHING!!!
+            // 게임 중
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            // PlayerController 가져오기
+            PlayerController playerCnt = player.GetComponent<PlayerController>();
+            // +++ 시간 제한 추가 +++
+            // 시간 갱신
+            if (timeCnt != null)
+            {
+                if (timeCnt.gameTime > 0.0f)
+                {
+                    // 정수에 할당하여 소수점 이하를 버림
+                    int time = (int)timeCnt.displayTime;
+                    // 시간 갱신
+                    timeText.GetComponent<Text>().text = time.ToString();
+                    // 타임 오버
+                    if (time == 0)
+                    {
+                        playerCnt.GameOver();   // 게임 오버
+                    }
+                }
+            }
         }
     }
 
