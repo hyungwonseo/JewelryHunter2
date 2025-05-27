@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class PlayerController : MonoBehaviour
 {
@@ -28,6 +29,8 @@ public class PlayerController : MonoBehaviour
     int jumpCount = 0;             // 현재 점프 횟수
     public int maxJumpCount = 2;   // 최대 점프 횟수 (2단 점프)
     // 이중점프 - 끝
+
+    public int score = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -153,6 +156,12 @@ public class PlayerController : MonoBehaviour
         else if (collision.gameObject.tag == "Dead")
         {
             GameOver();
+        }
+        else if (collision.gameObject.tag == "ScoreItem")
+        {
+            ItemData item = collision.gameObject.GetComponent<ItemData>();
+            score = item.value;
+            Destroy(collision.gameObject);
         }
     }
 
