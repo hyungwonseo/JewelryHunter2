@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviour
         onGround = hit.collider != null;
 
         // 이중점프 - 시작
-        if (onGround)
+        if (onGround && Mathf.Abs(rbody.velocity.y) > 0.01f)
         {
             jumpCount = 0;  // 착지 시 점프 횟수 초기화
         }
@@ -94,17 +94,17 @@ public class PlayerController : MonoBehaviour
             // y는 기존값 유지!!
         }
 
-        if (onGround && goJump)
-        {
-            rbody.AddForce(new Vector2(0, jump), ForceMode2D.Impulse);
-            goJump = false;
-        }
-        // 이중점프 - 시작
-        //if (goJump)
+        //if (onGround && goJump)
         //{
         //    rbody.AddForce(new Vector2(0, jump), ForceMode2D.Impulse);
         //    goJump = false;
         //}
+        // 이중점프 - 시작
+        if (goJump)
+        {
+            rbody.AddForce(new Vector2(0, jump), ForceMode2D.Impulse);
+            goJump = false;
+        }
         // 이중점프 - 끝
 
         if (onGround)
@@ -131,14 +131,14 @@ public class PlayerController : MonoBehaviour
     
     public void Jump()
     {
-        goJump = true;
+        //goJump = true;
 
-        // 이중점프 - 시작
-        //jumpCount++;  // 점프 횟수 증가
-        //if (jumpCount < maxJumpCount)
-        //{
-        //    goJump = true;            
-        //}
+        // 이중점프 - 시작        
+        if (jumpCount < maxJumpCount)
+        {
+            goJump = true;
+            jumpCount++;  // 점프 횟수 증가
+        }
         // 이중점프 - 끝
     }
 

@@ -193,4 +193,4 @@ MonoBehaviour:
   jumpAnime: PlayerJump
   goalAnime: PlayerGoal
   deadAnime: PlayerOver
-  maxJumpCount: 1
+  maxJumpCount: 2
